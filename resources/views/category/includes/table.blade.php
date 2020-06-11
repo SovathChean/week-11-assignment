@@ -21,13 +21,13 @@
              {!! Form::open(['method'=>'DELETE', 'action'=>['CategoryController@destroy', $category->id], 'style'=>'display: inline-block']) !!}
              {!! Form::submit('delete', ['class'=>'btn btn-outline-danger']) !!}
              {!! Form::close() !!}
-           @endcan
+            @endcan
              {!! Form::open(['method'=>'GET', 'action'=>['CategoryController@show', $category->id], 'style'=>'display: inline-block']) !!}
              {!! Form::submit('Show', ['class'=>'btn btn-outline-primary']) !!}
              {!! Form::close() !!}
               @can('ajaxDeleteCategory', $category)
              <button type="submit" class="btn btn-outline-danger ajax-delete" data-url="{{ route('categories.ajax_delete', $category) }}" data-id="category-{{ $category->id }}">Ajax Delete</button>
-           @endcan
+             @endcan
            </td>
 
 

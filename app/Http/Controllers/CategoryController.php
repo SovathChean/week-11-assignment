@@ -90,7 +90,7 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, $id)
     {
         //
-        
+
         $input = $request->all();
         $category = Category::findOrFail($id);
         $this->authorize('updateCategory', $category);
@@ -119,10 +119,10 @@ class CategoryController extends Controller
     public function ajaxDestroy($id)
     {
         $category = Category::findOrFail($id);
-        $category->delete();
-        if($this->authorize('ajaxDeleteCategory', $post))
+
+        if($this->authorize('ajaxDeleteCategory', $category))
         {
-          $post->delete();
+          $category->delete();
           return response()->json([
               'success' => true,
               'message' => 'Deleted'

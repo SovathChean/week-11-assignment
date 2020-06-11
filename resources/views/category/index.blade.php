@@ -7,9 +7,11 @@
             <div class="card">
                 <div class="card-header">
                   Category
+                  @can('createCategory', App\Models\Category::class)
                   <div  style="float: right">
                     <a href="{{route('category.create')}}" class="btn btn-primary" > Add Category</a>
                   </div>
+                  @endcan
                 </div>
 
                 <div class="card-body">

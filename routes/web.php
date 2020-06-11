@@ -12,17 +12,22 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return view('welcome');
+Route::group([
+  'middleware' => 'HtmlMinifier',
+], function(){
+  Route::get('/', function () {
+      return view('welcome');
+  });
+
+
+  Auth::routes();
+
+  Route::get('/home', 'HomeController@index')->name('home');
 });
 
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::group([
-    'middleware' => 'auth'
+    'middleware' => ['auth', 'HtmlMinifier'],
 ], function(){
    Route::resource('/post', 'PostController');
    Route::delete('posts/{post}/ajax-delete', 'PostController@ajaxDestroy')->name('posts.ajax_delete');
