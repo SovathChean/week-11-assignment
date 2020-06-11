@@ -47,12 +47,6 @@ class RegisterController extends Controller
    *
    * @return \Illuminate\View\View
    */
-      public function showRegistrationForm()
-      {
-          $roles = Role::all()->pluck('role_name', 'id');
-
-          return view('auth.register', compact('roles'));
-      }
 
 
     /**
@@ -65,7 +59,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'role_id' => ['required', 'integer'],
+            'role' => ['required', 'string', 'max:15'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -82,7 +76,7 @@ class RegisterController extends Controller
        return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'role_id' => $data['role_id'],
+            'role' => $data['role'],
             'password' => Hash::make($data['password']),
         ]);
 

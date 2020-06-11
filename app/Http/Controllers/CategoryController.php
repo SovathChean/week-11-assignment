@@ -30,6 +30,7 @@ class CategoryController extends Controller
     public function create()
     {
         //
+        $this->authorize('createCategory', Category::class);
         return view('category.create');
     }
 
@@ -43,7 +44,7 @@ class CategoryController extends Controller
     {
         //
         $input = $request->all();
-
+        $this->authorize('createCategory', Category::class);
         $category = Category::create($input);
         $category_id = Category::findOrFail($category->id)->id;
 
@@ -74,6 +75,7 @@ class CategoryController extends Controller
     {
         //
         $category = Category::findOrFail($id);
+        $this->authorize('editCategory', $category);
 
         return view('category.edit', ['category'=> $category]);
     }
@@ -88,8 +90,10 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, $id)
     {
         //
+        
         $input = $request->all();
         $category = Category::findOrFail($id);
+        $this->authorize('updateCategory', $category);
         $category->update($input);
 
         return redirect()->route('category.show', ['category'=>$category]);
@@ -105,9 +109,10 @@ class CategoryController extends Controller
     {
         //
         $category = Category::findOrFail($id);
+        $this->authorize('deleteCategory', $category);
         $category->delete();
         $post = Post::where('category_id', $id)->all();
-      
+
         return redirect()->route('category.index');
     }
 
@@ -115,12 +120,19 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
         $category->delete();
-        $post = Post::where('category_id', $id)->all();
-
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Deleted'
-        ]);
+        if($this->authorize('ajaxDeleteCategory', $post))
+        {
+          $post->delete();
+          return response()->json([
+              'success' => true,
+              'message' => 'Deleted'
+          ]);
+        }
+        else{
+          return response()->json([
+              'success' => false,
+              'message' => 'Unauthorize access'
+          ]);
+        }
     }
 }

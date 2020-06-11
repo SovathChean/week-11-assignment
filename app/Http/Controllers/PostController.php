@@ -113,7 +113,7 @@ class PostController extends Controller
       $input = $request->all();
       $input['creator_id'] = Auth::id();
       $post = Post::findOrFail($id);
-
+      $post->update($input);
       $this->authorize("updatePost", $post);
 
       return redirect()->route('post.show', ['post'=>$post]);
@@ -144,8 +144,7 @@ class PostController extends Controller
     public function ajaxDestroy($id)
     {
         $post = Post::findOrFail($id);
-        $this->authorize('ajaxDeletePost', $post);
-        if(Auth::id() == $post->user_id)
+        if($this->authorize('ajaxDeletePost', $post))
         {
           $post->delete();
           return response()->json([

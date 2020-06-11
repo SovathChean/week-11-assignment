@@ -25,13 +25,14 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="role_id" class="col-md-4 col-form-label text-md-right">{{ __('Role') }}</label>
+                            <label for="role" class="col-md-4 col-form-label text-md-right">{{ __('Role') }}</label>
 
                             <div class="col-md-6">
-                                <select id="role_id" class="form-control" name="role_id" required>
-                                    @foreach ($roles as $id => $role_name)
-                                        <option value="{{$id}}">{{$role_name}}</option>
-                                     @endforeach
+                                <select id="role" class="form-control" name="role" required>
+
+                                        <option value="admin">Admin</option>
+                                        <option value="editor">Editor</option>
+
                                 </select>
 
                                 @error('role_id')
