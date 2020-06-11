@@ -22,9 +22,9 @@ class PostController extends Controller
         //
         $num = config('setting.pagination_category_num');
         $posts = Post::paginate($num);
-        $auth = Auth::id();
 
-        return view('post.index', ['posts'=> $posts, 'auth'=>$auth]);
+
+        return view('post.index', ['posts'=> $posts]);
 
     }
 
@@ -52,10 +52,12 @@ class PostController extends Controller
     {
         //
         $input = $request->all();
-        $input['user_id'] = Auth::id();
+        $input['creator_id'] = Auth::id();
         $posts = Post::create($input);
 
         $post = Post::findOrFail($posts->id)->id;
+
+
 
         return redirect()->route('post.show', [$post]);
 
@@ -88,15 +90,14 @@ class PostController extends Controller
 
        $post = Post::findOrFail($id);
        $auth = Auth::id();
-       if($auth == $post->user_id){
 
-         $categories = DB::table('categories')->pluck('name', 'id')->all();
+       $this->authorize("editPost", $post);
 
-         return view('post.edit', ['post'=>$post, 'categories'=>$categories]);
-       }
-      else {
-        return view('post.unauthorize');
-      }
+       $categories = DB::table('categories')->pluck('name', 'id')->all();
+
+       return view('post.edit', ['post'=>$post, 'categories'=>$categories]);
+
+
     }
 
     /**
@@ -110,14 +111,14 @@ class PostController extends Controller
     {
         //
       $input = $request->all();
-      $input['user_id'] = Auth::id();
+      $input['creator_id'] = Auth::id();
       $post = Post::findOrFail($id);
-      if(Auth::id() == $post->user_id){
-        $post->update($input);
 
-        return redirect()->route('post.show', ['post'=>$post]);
-       }
-     return view('post.unauthorize');
+      $this->authorize("updatePost", $post);
+
+      return redirect()->route('post.show', ['post'=>$post]);
+
+
     }
 
     /**
@@ -130,19 +131,20 @@ class PostController extends Controller
     {
         //
       $post = Post::findOrFail($id);
-      if(Auth::id() == $post->user_id)
-      {
-        $post->delete();
-        return redirect()->route('post.index');
-      }
+      $this->authorize('deletePost', $post);
 
-     return view('post.unauthorize');
+      $post->delete();
+      return redirect()->route('post.index');
+
+
+     // return view('post.unauthorize');
 
     }
 
     public function ajaxDestroy($id)
     {
         $post = Post::findOrFail($id);
+        $this->authorize('ajaxDeletePost', $post);
         if(Auth::id() == $post->user_id)
         {
           $post->delete();

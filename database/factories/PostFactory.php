@@ -11,6 +11,6 @@ $factory->define(Post::class, function (Faker $faker) {
         //
         'name' => $faker->word,
         'category_id' => factory(Category::class),
-        'user_id' => $faker->numberBetween(1, 10)
+        'creator_id' => $faker->numberBetween(1, 10)
     ];
 });

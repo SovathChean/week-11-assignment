@@ -31,17 +31,22 @@
                                  <td>{{$post->user->name}}</td>
 
                                  <td>
-                                   @if($post->user_id == $auth || $auth == 1)
+
+                                   @can('updatePost', $post)
                                    {!! Form::open(['method'=>'GET', 'action'=>['PostController@edit', $post->id], 'style'=>'display: inline-block']) !!}
                                    {!! Form::submit('update', ['class'=>'btn btn-outline-info']) !!}
                                    {!! Form::close() !!}
+                                   @endcan
 
+                                   @can('deletePost', $post)
                                    {!! Form::open(['method'=>'DELETE', 'action'=>['PostController@destroy', $post->id], 'style'=>'display: inline-block']) !!}
                                    {!! Form::submit('delete', ['class'=>'btn btn-outline-danger']) !!}
                                    {!! Form::close() !!}
-
+                                   @endcan
+                                   @can('ajaxDeletePost', $post)
                                       <button type="submit" class="btn btn-outline-danger ajax-delete" data-url="{{ route('posts.ajax_delete', $post) }}" data-id="post-{{ $post->id }}">Ajax Delete</button>
-                                   @endif
+                                   @endcan
+
                                    {!! Form::open(['method'=>'GET', 'action'=>['PostController@show', $post->id], 'style'=>'display: inline-block']) !!}
                                    {!! Form::submit('Show', ['class'=>'btn btn-outline-primary']) !!}
                                    {!! Form::close() !!}
